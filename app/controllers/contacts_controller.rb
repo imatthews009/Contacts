@@ -24,10 +24,12 @@ class ContactsController < ApplicationController
     end
 
     def update
-        @contact = Contact.find_by(id: params[:id])
-        @contact.update({first_name: params[:first_name], last_name: params[:last_name], email: params[:email], phone_number: params[:phone_number]})
-        @contact.save
-        render "update.html.erb"
+        contact = Contact.find_by(id: params[:id])
+        contact.update({first_name: params[:first_name], last_name: params[:last_name], email: params[:email], phone_number: params[:phone_number]})
+        contact.save
+        flash[:succes] = "Contact Updated"
+        redirect_to "/contacts/#{contact.id}"
+        
     end
     def destroy
         @contact = Contact.find_by(id: params[:id])

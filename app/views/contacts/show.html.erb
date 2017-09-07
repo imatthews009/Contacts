@@ -1,8 +1,11 @@
 First name: <p><%= @contact.first_name %></p>
 Last name: <p><%= @contact.last_name %></p>
+Full name: <p><%= @contact.full_name %></p>
 E-mail: <p><%= @contact.email %></p>
-Phone number: <p><%= @contact.phone_number %></p>
-
+Phone number: <p><%= @contact.japan_number %></p>
+Last updated: <p><%= @contact.friendly_update_time %></p>
+<a class= "btn btn-primary" href="/contacts/<%= @contact.id %>/edit">Edit</a>
 <%= form_tag "/contacts/#{@contact.id}", method: :delete do %>
     <input type="submit" value= "Delete">
+
 <% end %>
