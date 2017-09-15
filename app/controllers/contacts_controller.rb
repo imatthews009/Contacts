@@ -1,14 +1,22 @@
 class ContactsController < ApplicationController
     def index
-        @contacts = Contact.all
-        render "index.html.erb"
+        if current_user
+            @contacts = current_user.contacts
+            render "index.html.erb"
+        else
+            flash[:error] = "Must be logged in"
+            redirect_to "/login"
+        end
+
     end
     def new 
         render "new.html.erb"
     end
 
     def create
-        @contact = Contact.new({first_name: params[:first_name], last_name: params[:last_name], email: params[:email], phone_number: params[:phone_number]})
+        address = params[:address]
+        coordinates = Geocoder.coordinates(address)
+        @contact = Contact.new({first_name: params[:first_name], middle_name: params[:middle_name],last_name: params[:last_name], email: params[:email], phone_number: params[:phone_number], bio: params[:bio], latitude: coordinates[0], longitude: coordinates[1], user_id: current_user.id})
         @contact.save
         render "create.html.erb"
     end
@@ -25,7 +33,7 @@ class ContactsController < ApplicationController
 
     def update
         contact = Contact.find_by(id: params[:id])
-        contact.update({first_name: params[:first_name], last_name: params[:last_name], email: params[:email], phone_number: params[:phone_number]})
+        contact.update({first_name: params[:first_name], middle_name: params[:middle_name], last_name: params[:last_name], email: params[:email], phone_number: params[:phone_number], bio: params[:bio], latitude: params[Geocoder.coordinates(:address)]})
         contact.save
         flash[:succes] = "Contact Updated"
         redirect_to "/contacts/#{contact.id}"
